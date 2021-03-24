@@ -1,3 +1,5 @@
+import org.w3c.dom.Attr;
+
 /**
  * This class enables the construction of a decision tree
  * 
@@ -36,6 +38,45 @@ public class DecisionTree {
 	@SuppressWarnings("unchecked")
 	private void build(Node<VirtualDataSet> node) {
 		// WRITE YOUR CODE HERE!
+
+		// 1 - Edge Cases
+		if (node.data == null || node.data.numAttributes < 1 || node.data.numRows < 1)
+			return;
+
+		// 2 - Base Cases
+		if (node.data.numAttributes == 1 && node.data.getAttribute(0).getName().equals("class"))
+			return;
+		boolean multipleUnqiue = false;
+		for (int i = 0; i < node.data.numAttributes; i++) {
+			if (node.data.getAttribute(i).getName().equals("class"))
+				continue;
+			else if (node.data.getUniqueAttributeValues(i).length > 1);
+				multipleUnqiue = true;
+		}
+		if (!multipleUnqiue)
+			return;
+
+		// 3 - Recursive Cases
+		// 3.1
+		Attribute a_max = null;
+		double max_gain = 0;
+		GainInfoItem[] gains = InformationGainCalculator.calculateAndSortInformationGains(node.data);
+		for (GainInfoItem gain : gains){
+			if (gain.getGainValue() > max_gain) {
+				max_gain = gain.getGainValue();
+				a_max = node.data.getAttribute(gain.getAttributeName());
+			}
+		}
+		assert a_max != null;
+		System.out.println(a_max.getName());
+
+		// 3.2
+		
+		
+
+		
+
+
 	}
 
 	@Override
